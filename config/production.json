@@ -1,0 +1,7 @@
+{
+    "name": "Express API --production",
+    "mail": {
+        "host": "prod-mail"
+    }
+
+}
