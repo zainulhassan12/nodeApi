@@ -85,7 +85,7 @@ export const ECourselist = mongoose.model('EmbededCourceList', new mongoose.Sche
         enum: ["web", "asp"],
         lowercase: true
     },
-    code: Number,
+    code: { type: Number },
 
     authors: [authorSchema],
     tags: {
