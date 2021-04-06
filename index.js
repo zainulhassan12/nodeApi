@@ -50,7 +50,7 @@ console.log(process.env.NODE_ENV)
 const port = process.env.PORT || 5000;
 console.log("APP =>", config.get("name"))
 console.log("mailServer =>", config.get("mail.host"))
-console.log("mailPassword =>", config.get("mail.password"))
+// console.log("mailPassword =>", config.get("mail.password"))
 
 
 // function getUser(id) {
