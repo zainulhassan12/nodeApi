@@ -5,6 +5,7 @@ import config from 'config';
 
 import userRoutes from './routes/users.js';
 import authorsRoutes from './routes/authors.js';
+import authRoutes from './routes/auth.js'
 
 import { log, authenticate } from './contollers/logger.js';
 import helmet from 'helmet';
@@ -42,6 +43,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/users', userRoutes);
+app.use('/api/users', authRoutes);
 app.use('/authors', authorsRoutes);
 
 
@@ -50,7 +52,7 @@ console.log(process.env.NODE_ENV)
 const port = process.env.PORT || 5000;
 console.log("APP =>", config.get("name"))
 console.log("mailServer =>", config.get("mail.host"))
-// console.log("mailPassword =>", config.get("mail.password"))
+    // console.log("mailPassword =>", config.get("mail.password"))
 
 
 // function getUser(id) {

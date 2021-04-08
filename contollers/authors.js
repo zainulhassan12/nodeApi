@@ -1,11 +1,16 @@
 import { Author, } from '../models/models.js';
 import { ECourse, ECourselist } from '../models/embedding.js'
-import mongoose from 'mongoose';
+import Joi from 'joi';
+import joiObject from 'joi-objectid';
+const myObjectId = joiObject(Joi);
+
+
 export const createAuthor = async(req, res) => {
     try {
         const author = new Author(req.body);
         const result = await author.save();
         res.send(result);
+        console.log(myObjectId)
     } catch (ex) {
         res.send(ex.message);
 
