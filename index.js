@@ -43,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 app.use('/users', userRoutes);
-app.use('/api/users', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/authors', authorsRoutes);
 
 
