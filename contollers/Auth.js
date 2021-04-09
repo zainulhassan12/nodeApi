@@ -11,9 +11,9 @@ import { token } from 'morgan';
 
 export const getUsers = async(req, res) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select("-password").sort('name');
         if (!users.length) return res.status(404).send("Not any User available!")
-        res.send(_.pick(users, ['name']))
+        res.send(users)
     } catch (exc) {
         res.status(400).send(exc.message)
     }

@@ -7,8 +7,8 @@ export default function(req, res, next) {
     console.log(token)
     if (!token) return res.status(401).send("Access denied!! No tokken provided")
     try {
+        console.log(req)
         const decode = jwt.verify(token, config.get("key_to_auth"))
-        console.log(decode);
         req.user = decode;
         next();
 

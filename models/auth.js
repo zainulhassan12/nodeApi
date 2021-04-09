@@ -28,10 +28,11 @@ const userSchema = new moongose.Schema({
         required: true,
         trim: true,
 
-    }
+    },
+    isAdmin: Boolean
 })
 userSchema.methods.generateKey = function() {
-    return jwt.sign({ _id: this._id, name: this.name }, config.get('key_to_auth'))
+    return jwt.sign({ _id: this._id, name: this.name, isAdmin: this.isAdmin }, config.get('key_to_auth'))
 }
 
 export const User = moongose.model('User', userSchema)
