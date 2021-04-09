@@ -3,6 +3,9 @@ import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import { User, validateUser } from '../models/auth.js';
 import Joi from 'joi';
+import jwt from 'jsonwebtoken';
+import config from 'config';
+import { token } from 'morgan';
 
 
 
@@ -10,7 +13,7 @@ export const getUsers = async(req, res) => {
     try {
         const users = await User.find();
         if (!users.length) return res.status(404).send("Not any User available!")
-        res.send(users)
+        res.send(_.pick(users, ['name']))
     } catch (exc) {
         res.status(400).send(exc.message)
     }
@@ -26,7 +29,8 @@ export const createAuthUser = async(req, res) => {
         newUser.password = await bcrypt.hash(newUser.password, salt)
         const user = await newUser.save()
         console.log(user)
-        res.send(_.pick(user, ['name', 'email']))
+        const tokken = user.generateKey()
+        res.header('x-auth-tokken', tokken).send(_.pick(user, ['name', 'email']))
 
     } catch (exc) {
         res.status(400).send(exc.message)
@@ -43,7 +47,11 @@ export const authenticateUser = async(req, res) => {
         if (!user) return res.status(400).send("Eaither email or password is invalid!")
         const authStatus = await bcrypt.compare(req.body.password, user.password);
         if (!authStatus) return res.status(400).send(authStatus)
-        res.status(200).send(authStatus)
+            //with my encrypted way. look index.js
+            // const tok = jwt.sign({ _id: user._id, name: user.name }, process.env.env_token_key)
+        const tok = user.generateKey()
+            // console.log(tok)
+        res.status(200).send(tok)
 
     } catch (exc) {
         res.send(exc.message)

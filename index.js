@@ -2,6 +2,7 @@ import express, { query } from 'express';
 import bodyParsers from 'body-parser';
 import debug from 'debug';
 import config from 'config';
+import bcrypt from 'bcrypt';
 
 import userRoutes from './routes/users.js';
 import authorsRoutes from './routes/authors.js';
@@ -28,7 +29,18 @@ app.use(bodyParsers.json());
 app.use(log);
 app.use(authenticate);
 app.use(helmet());
+if (!config.get('key_to_auth')) {
+    console.error("FATAL ERROR: Key for authentication is not defined!")
+    process.exit(1)
+}
 if (app.get('env') === "development") app.use(morgan('tiny'))
+
+
+// // tokken setting with encryption == bcrypt
+// if (app.get('env') === "development") {
+//     const salt = await bcrypt.genSalt(14);
+//     process.env.env_token_key = await bcrypt.hash(config.get("jwt_key"), salt)
+// }
 
 //Routes
 app.get('/', (req, res) => {

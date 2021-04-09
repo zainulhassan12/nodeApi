@@ -2,7 +2,8 @@
 
     "mail": {
         "password": "password"
-    }
+    },
+    "key_to_auth": "expressApi_key"
 
 
 }

@@ -1,10 +1,13 @@
 import moongose from 'mongoose';
 import Joi from 'joi';
 import objectid from 'joi-objectid';
+import _ from 'lodash';
+import config from 'config';
+import jwt from 'jsonwebtoken';
 
 const objectId = objectid(Joi);
 
-export const User = moongose.model('User', new moongose.Schema({
+const userSchema = new moongose.Schema({
     name: {
         type: String,
         min: 4,
@@ -26,7 +29,12 @@ export const User = moongose.model('User', new moongose.Schema({
         trim: true,
 
     }
-}))
+})
+userSchema.methods.generateKey = function() {
+    return jwt.sign({ _id: this._id, name: this.name }, config.get('key_to_auth'))
+}
+
+export const User = moongose.model('User', userSchema)
 export const validateUser = (body) => {
     const Schema = Joi.object({
         name: Joi.string().min(4).max(255).required(),
