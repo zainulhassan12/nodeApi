@@ -5,17 +5,17 @@ import { User, validateUser } from '../models/auth.js';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import config from 'config';
-import { token } from 'morgan';
+
 import { asyncMiddleware } from '../contollers/middlewares/asyncMiddleware.js'
 
 
 
-export const getUsers = asyncMiddleware(async(req, res) => {
+export const getUsers = async(req, res) => {
 
     const users = await User.find().select("-password").sort('name');
     if (!users.length) return res.status(404).send("Not any User available!")
     res.send(users)
-})
+}
 
 export const createAuthUser = async(req, res) => {
     try {

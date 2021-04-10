@@ -13,6 +13,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import mongoose from 'mongoose'
+import _ from 'lodash';
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
