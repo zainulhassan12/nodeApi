@@ -1,8 +1,10 @@
-import express, { query } from 'express';
+import express from 'express';
 import bodyParsers from 'body-parser';
 import debug from 'debug';
 import config from 'config';
 import bcrypt from 'bcrypt';
+import winston from 'winston';
+import * as winDb from 'winston-mongodb';
 
 import userRoutes from './routes/users.js';
 import authorsRoutes from './routes/authors.js';
@@ -13,7 +15,8 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 import mongoose from 'mongoose'
-import _ from 'lodash';
+import _id from 'lodash';
+
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
@@ -22,6 +25,24 @@ mongoose.connect("mongodb://localhost/course")
     .then(sucesss => console.log("database is connected!!"))
     .catch(Error => console.log(Error))
 
+winston.add(new winston.transports.File({ filename: 'logfile.log' }));
+winston.add(new winston.transports.MongoDB({ db: 'mongodb://localhost/course', level: 'error' }));
+process.on('uncaughtException', (ex) => {
+    console.log("we got an Unhandeled Exception!!!");
+    winston.error(ex.message, ex);
+
+})
+
+// winston.exceptions(new winston.transports.File({ filename: 'unhandeledExceptions.log', handleExceptions: true }))
+// winston.ExceptionHandler(new winston.transports.File({ filename: 'unhandeledExceptions.log', handleExceptions: true }))
+process.on('unhandledRejection', (exc) => {
+    throw exc
+});
+// throw new Error('something outside the request processing')
+const p = new Promise((resolve, reject) => {
+    reject("failed unexpected during processing")
+})
+p.then("resolved promise!!")
 
 const app = express();
 app.set('view engine', 'pug');

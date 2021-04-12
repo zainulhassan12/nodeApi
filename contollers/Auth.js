@@ -1,5 +1,6 @@
 import express from 'express';
 import _ from 'lodash';
+import winston from 'winston';
 import bcrypt from 'bcrypt';
 import { User, validateUser } from '../models/auth.js';
 import Joi from 'joi';
@@ -10,30 +11,26 @@ import { asyncMiddleware } from '../contollers/middlewares/asyncMiddleware.js'
 
 
 
-export const getUsers = async(req, res) => {
-
+export const getUsers = asyncMiddleware(async(req, res) => {
+    // throw new Error("testing the winston");
     const users = await User.find().select("-password").sort('name');
     if (!users.length) return res.status(404).send("Not any User available!")
     res.send(users)
-}
+})
 
-export const createAuthUser = async(req, res) => {
-    try {
-        //_.pick(req.body, ['name', 'email', 'password'])
-        const validUser = validateUser(req.body)
-        if (validUser.error) return res.send(validUser.error.details[0].message)
-        const newUser = new User(req.body)
-        const salt = await bcrypt.genSalt(14)
-        newUser.password = await bcrypt.hash(newUser.password, salt)
-        const user = await newUser.save()
-        console.log(user)
-        const tokken = user.generateKey()
-        res.header('x-auth-tokken', tokken).send(_.pick(user, ['name', 'email']))
+export const createAuthUser = asyncMiddleware(async(req, res) => {
 
-    } catch (exc) {
-        res.status(400).send(exc.message)
-    }
-}
+    //_.pick(req.body, ['name', 'email', 'password'])
+    const validUser = validateUser(req.body)
+        // if (validUser.error) return res.send(validUser.error.details[0].message)
+    const newUser = new User(req.body)
+    const salt = await bcrypt.genSalt(14)
+    newUser.password = await bcrypt.hash(newUser.password, salt)
+    const user = await newUser.save()
+    console.log(user)
+    const tokken = user.generateKey()
+    res.header('x-auth-tokken', tokken).send(_.pick(user, ['name', 'email']))
+})
 
 export const authenticateUser = async(req, res) => {
 
