@@ -1,4 +1,5 @@
 import express from 'express';
+import 'express-async-errors';
 import bodyParsers from 'body-parser';
 import debug from 'debug';
 import config from 'config';
@@ -32,6 +33,8 @@ process.on('uncaughtException', (ex) => {
     winston.error(ex.message, ex);
 
 })
+
+
 
 // winston.exceptions(new winston.transports.File({ filename: 'unhandeledExceptions.log', handleExceptions: true }))
 // winston.ExceptionHandler(new winston.transports.File({ filename: 'unhandeledExceptions.log', handleExceptions: true }))
